@@ -49,7 +49,7 @@ while IFS= read -r p; do
         files_with_issues+=("$p")
         ok=0
     fi
-done < <(find . -path './.git' -prune -o -type f -name '*.yml' -path '*/.github/workflows/*' -print 2>/dev/null)
+done < <(find . -path './.git' -prune -o -path './node_modules' -prune -o -type f -name '*.yml' -path '*/.github/workflows/*' -print 2>/dev/null)
 
 if [[ $checked -eq 0 ]]; then
     echo "SKIP  no .github/workflows/*.yml files in this repo"

@@ -38,7 +38,7 @@ while IFS= read -r p; do
         files_with_issues+=("$p")
         ok=0
     fi
-done < <(find . -path './.git' -prune -o -path '*/target' -prune -o -type f -path '*/docs/*' -name '*.html' -print 2>/dev/null)
+done < <(find . -path './.git' -prune -o -path './node_modules' -prune -o -path '*/target' -prune -o -type f -path '*/docs/*' -name '*.html' -print 2>/dev/null)
 
 if [[ $checked -eq 0 ]]; then
     echo "SKIP  no docs/*.html files in this repo"

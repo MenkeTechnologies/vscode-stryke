@@ -5,7 +5,6 @@
   "version": "0.1.0",
   "publisher": "MenkeTechnologies",
   "license": "MIT",
-  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.75.0"
   },

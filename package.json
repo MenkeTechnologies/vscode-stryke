@@ -1,0 +1,93 @@
+{
+  "name": "vscode-stryke",
+  "displayName": "stryke",
+  "description": "Language support for stryke — syntax highlighting (the complete builtin surface), filetype detection, and LSP (stryke --lsp).",
+  "version": "0.1.0",
+  "publisher": "MenkeTechnologies",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "stryke",
+    "perl",
+    "stk",
+    "parallel",
+    "lsp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MenkeTechnologies/vscode-stryke.git"
+  },
+  "homepage": "https://menketechnologies.github.io/vscode-stryke/",
+  "bugs": {
+    "url": "https://github.com/MenkeTechnologies/vscode-stryke/issues"
+  },
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:stryke"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "stryke",
+        "aliases": [
+          "Stryke",
+          "stryke"
+        ],
+        "extensions": [
+          ".stk"
+        ],
+        "filenames": [],
+        "firstLine": "^#!.*\\bstryke\\b",
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "stryke",
+        "scopeName": "source.stryke",
+        "path": "./syntaxes/stryke.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "title": "stryke",
+      "properties": {
+        "stryke.path": {
+          "type": "string",
+          "default": "stryke",
+          "description": "Path to the stryke executable used for the language server."
+        },
+        "stryke.lsp.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Start the stryke language server (stryke --lsp). Disable to use syntax highlighting only."
+        },
+        "stryke.lsp.args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "--lsp"
+          ],
+          "description": "Arguments passed to the stryke executable to start the language server."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "gen": "bash scripts/gen_grammar.sh",
+    "vscode:prepublish": "echo no build step"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.2.1"
+  }
+}

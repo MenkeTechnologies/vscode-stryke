@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.3
+
+- Resolve the `stryke` binary to an absolute path before starting the language
+  server, searching `PATH` plus common install locations (`/opt/homebrew/bin`,
+  `/usr/local/bin`, `~/.cargo/bin`, `~/.local/bin`). Editors launched from the
+  macOS Dock / Finder don't inherit the shell `PATH`, so a bare `stryke` failed
+  to spawn — and the failed spawn made vscode-languageclient retry and emit
+  uncaught "Client is not running and can't be stopped" / "Pending response
+  rejected" errors that an extension can't intercept. When the binary genuinely
+  can't be found, the client is no longer started at all (warn + keep syntax
+  highlighting), so the error cascade can't occur.
+
 ## 0.1.2
 
 - Fix uncaught errors ("Client is not running and can't be stopped",

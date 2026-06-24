@@ -48,8 +48,8 @@ jobs:
       - name: Tokenize sample with vscode-textmate (asserts scopes)
         run: node scripts/tokenize_test.js
 
-      - name: Binary resolver unit tests (GUI-PATH regression)
-        run: node --test scripts/resolver_test.js
+      - name: Extension unit tests (resolver + LSP spawn-contract regressions)
+        run: node --test scripts/resolver_test.js scripts/activate_test.js
 
       - name: README / docs / workflow validators
         run: |

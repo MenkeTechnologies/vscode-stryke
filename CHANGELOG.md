@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.4
+
+- Fix the actual cause of the language server never connecting. Passing
+  `transport: TransportKind.stdio` to the language client makes
+  vscode-languageclient append `--stdio` to the server argv, so it spawned
+  `stryke --lsp --stdio`; stryke's CLI rejects the extra argument
+  ("error: unexpected argument found") and exits before the JSON-RPC handshake,
+  which surfaced as "Pending response rejected since connection got disposed"
+  and the StartFailed retry cascade. The transport is now omitted — the client
+  still speaks JSON-RPC over the process stdio, but spawns bare `stryke --lsp`,
+  which is what the binary expects. (0.1.2/0.1.3 addressed the teardown and PATH
+  handling; this is the fix that makes the server actually start.)
+
 ## 0.1.3
 
 - Resolve the `stryke` binary to an absolute path before starting the language

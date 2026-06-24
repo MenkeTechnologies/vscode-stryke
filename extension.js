@@ -7,7 +7,7 @@
 //   --lsp   Language Server (JSON-RPC on stdio); must be the only arg after stryke
 
 const vscode = require('vscode');
-const { LanguageClient, TransportKind } = require('vscode-languageclient/node');
+const { LanguageClient } = require('vscode-languageclient/node');
 const { resolveStrykeBinary } = require('./lib/resolveBinary');
 
 let client;
@@ -35,9 +35,19 @@ function activate(context) {
     return;
   }
 
+  // NOTE: do NOT set `transport: TransportKind.stdio`. For a command-based
+  // server, vscode-languageclient reacts to that by appending `--stdio` to the
+  // argv (see vscode-languageclient/lib/node/main.js — the Executable branch),
+  // so it would spawn `stryke --lsp --stdio`. stryke's CLI rejects the extra
+  // arg ("error: unexpected argument found") and exits before the JSON-RPC
+  // handshake — which the client reports as "Pending response rejected since
+  // connection got disposed" plus the StartFailed retry cascade. With transport
+  // omitted the client still talks JSON-RPC over the process stdout/stdin (the
+  // `transport === undefined` path uses StreamMessageReader/Writer), but spawns
+  // bare `stryke --lsp`, which is what the binary expects.
   const serverOptions = {
-    run: { command, args, transport: TransportKind.stdio },
-    debug: { command, args, transport: TransportKind.stdio }
+    run: { command, args },
+    debug: { command, args }
   };
 
   const clientOptions = {

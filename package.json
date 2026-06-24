@@ -2,7 +2,7 @@
   "name": "vscode-stryke",
   "displayName": "stryke",
   "description": "Language support for stryke — syntax highlighting (the complete builtin surface), filetype detection, and LSP (stryke --lsp).",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "MenkeTechnologies",
   "license": "MIT",
   "engines": {

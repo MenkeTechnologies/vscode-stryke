@@ -15,7 +15,7 @@
 
 > *"Open a `.stk`. The whole language lights up — all 10,450 builtins."*
 
-VS Code / VSCodium support for **[stryke](https://github.com/MenkeTechnologies/strykelang)** — a highly parallel Perl 5 superset interpreter written in Rust. A standalone TextMate grammar (not a perl reskin), filetype detection, and language-server integration via `stryke --lsp`.
+VS Code / VSCodium support for **[stryke](https://github.com/MenkeTechnologies/strykelang)** — a highly parallel Perl 5 superset interpreter written in Rust. A standalone TextMate grammar (not a perl reskin), filetype detection, language-server integration via `stryke --lsp`, one-key running, and full debugging (breakpoints, stepping, variables) via `stryke --dap`.
 
 ### [`Read the Docs`](https://menketechnologies.github.io/vscode-stryke/) &middot; [`Engineering Report`](https://menketechnologies.github.io/vscode-stryke/report.html) · [`strykelang`](https://github.com/MenkeTechnologies/strykelang) · [`vim-stryke`](https://github.com/MenkeTechnologies/vim-stryke) · [`zshrs`](https://github.com/MenkeTechnologies/zshrs)
 
@@ -28,6 +28,8 @@ VS Code / VSCodium support for **[stryke](https://github.com/MenkeTechnologies/s
 - **Filetype detection** — `*.stk` files and files whose first line is a stryke shebang (`#!/usr/bin/env stryke`).
 - **Syntax highlighting** — a standalone TextMate grammar (`source.stryke`).
 - **Language server** — `stryke --lsp` via [vscode-languageclient](https://github.com/microsoft/vscode-languageserver-node) (diagnostics, hover, completion — whatever the server provides).
+- **Run** — `Stryke: Run File` (Ctrl+F5) executes the active script in a terminal.
+- **Debugging** — breakpoints, stepping, call stack, variables, and watch via stryke's native debug adapter (`stryke --dap`).
 
 The grammar is **generated** (`scripts/gen_grammar.sh`) directly from the stryke binary's own reflection tables, so it carries the **complete** language surface and never drifts — it is **not** a reskin of the built-in Perl grammar:
 
@@ -49,6 +51,8 @@ Created by **[MenkeTechnologies](https://github.com/MenkeTechnologies)**.
 | Comments / brackets / autoclose | **Implemented** — `language-configuration.json` |
 | Indentation | **Implemented** — brace-based `indentationRules` |
 | Language server | **Implemented** — `stryke --lsp` via vscode-languageclient |
+| Run | **Implemented** — `Stryke: Run File` (Ctrl+F5 / editor-title ▶) runs `stryke <file>` in a terminal |
+| Debugging | **Implemented** — breakpoints, step over/into/out, call stack, scopes, variables, watch/hover, run-without-debugging, via `stryke --dap` (native DAP) |
 | Config | `stryke.path`, `stryke.lsp.enabled`, `stryke.lsp.args` |
 
 > The language server needs the `stryke` binary. The extension resolves it from
@@ -83,7 +87,40 @@ Open any `.stk` file — it lights up. The language server starts automatically 
 
 ---
 
-## [0x03] SYNTAX // SCOPES
+## [0x03] RUN & DEBUG
+
+**Run** — open a `.stk` file and press **Ctrl+F5**, click the **▶** in the editor
+title bar, or run **Stryke: Run File** from the command palette. The file is saved
+and executed as `stryke <file>` in an integrated terminal.
+
+**Debug** — set breakpoints in the gutter and press **F5** (or click the **debug**
+icon in the editor title bar). No `launch.json` is required: F5 on a `.stk` file
+debugs the active file. You get the full debugger — breakpoints, step
+over/into/out, call stack, scopes, local + global variables, watch expressions,
+and hover-to-evaluate — driven by stryke's native debug adapter (`stryke --dap`).
+
+For a saved configuration, add to `.vscode/launch.json`:
+
+```json
+{
+  "type": "stryke",
+  "request": "launch",
+  "name": "Stryke: Debug Current File",
+  "program": "${file}",
+  "cwd": "${workspaceFolder}",
+  "stopOnEntry": false,
+  "args": []
+}
+```
+
+Launch attributes: `program`, `args`, `cwd`, `stopOnEntry`, `noDebug`,
+`interpreterArgs`, and `strykePath` (override the binary for one session). The
+adapter binary is resolved the same way as the language server, so it works under
+the macOS GUI `$PATH`.
+
+---
+
+## [0x04] SYNTAX // SCOPES
 
 The grammar maps stryke tokens to standard TextMate scopes, so every VS Code theme colors them:
 
@@ -104,7 +141,7 @@ Strings (single / double / backtick / `qw` / `q` / `qq` / `qx`), here-docs, inte
 
 ---
 
-## [0x04] LANGUAGE SERVER
+## [0x05] LANGUAGE SERVER
 
 The extension launches `stryke --lsp` (stdio JSON-RPC) through `vscode-languageclient`. Configure it in Settings:
 
@@ -118,7 +155,7 @@ If the binary is missing, the extension shows one non-fatal warning and syntax h
 
 ---
 
-## [0x05] REGENERATING THE GRAMMAR
+## [0x06] REGENERATING THE GRAMMAR
 
 The builtin surface is generated from the live binary so it never drifts. After a stryke upgrade:
 
@@ -136,7 +173,7 @@ node scripts/tokenize_test.js
 
 ---
 
-## [0x06] LAYOUT
+## [0x07] LAYOUT
 
 ```
 vscode-stryke/
@@ -150,6 +187,6 @@ vscode-stryke/
 
 ---
 
-## [0x07] LICENSE
+## [0x08] LICENSE
 
 MIT © **[MenkeTechnologies](https://github.com/MenkeTechnologies)**

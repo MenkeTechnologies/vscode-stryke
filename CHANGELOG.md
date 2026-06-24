@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0
+
+- Add **running**: `Stryke: Run File` command (Ctrl+F5, editor-title ▶, command
+  palette) saves and runs the active `.stk` file as `stryke <file>` in a terminal.
+- Add **debugging** via stryke's native debug adapter (`stryke --dap`): gutter
+  breakpoints, step over/into/out, call stack, scopes, local + global variables,
+  watch / hover-to-evaluate, and run-without-debugging. F5 on a `.stk` file works
+  with no `launch.json`; launch attributes `program`/`args`/`cwd`/`stopOnEntry`/
+  `noDebug`/`interpreterArgs`/`strykePath` are supported. The adapter binary is
+  resolved like the language server, so it works under the macOS GUI `$PATH`.
+
 ## 0.1.4
 
 - Fix the actual cause of the language server never connecting. Passing

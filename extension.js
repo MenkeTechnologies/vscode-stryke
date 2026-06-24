@@ -39,7 +39,11 @@ function activate(context) {
     clientOptions
   );
 
-  // start() rejects if the binary is missing; surface it once, non-fatally.
+  // start() rejects if the binary is missing (e.g. `stryke` not on the
+  // editor's PATH — GUI launches on macOS don't inherit the shell PATH);
+  // surface it once, non-fatally. Without this catch the rejection — and
+  // the "Pending response rejected since connection got disposed" that
+  // follows — would bubble up as an uncaught error.
   client.start().catch((err) => {
     vscode.window.showWarningMessage(
       `stryke language server failed to start (${command} --lsp): ${err.message}. ` +
@@ -47,11 +51,28 @@ function activate(context) {
     );
   });
 
-  context.subscriptions.push({ dispose: () => client && client.stop() });
+  context.subscriptions.push({ dispose: stopClient });
+}
+
+// stop() throws synchronously unless the client is actually Running — in the
+// Starting / StartFailed states it raises "Client is not running and can't be
+// stopped". A failed `stryke --lsp` launch leaves the client in exactly those
+// states, so calling stop() from the dispose handler or deactivate() on window
+// reload / shutdown spammed uncaught errors. Only stop a running client, and
+// swallow any late rejection from the stop itself.
+function stopClient() {
+  if (!client || !client.isRunning()) {
+    return undefined;
+  }
+  try {
+    return Promise.resolve(client.stop()).catch(() => undefined);
+  } catch (_e) {
+    return undefined;
+  }
 }
 
 function deactivate() {
-  return client ? client.stop() : undefined;
+  return stopClient();
 }
 
 module.exports = { activate, deactivate };

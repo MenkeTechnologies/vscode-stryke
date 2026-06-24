@@ -61,5 +61,17 @@ jobs:
           done
           exit "$fail"
 
-      - name: Package the extension (.vsix)
-        run: npx --yes @vscode/vsce package --no-dependencies -o /tmp/vscode-stryke.vsix
+      - name: Package the extension (.vsix) and verify the runtime dep is bundled
+        # Must NOT use --no-dependencies: extension.js does
+        # `require('vscode-languageclient/node')`, which VS Code does NOT
+        # provide. Packaging without the dependency yields a .vsix whose
+        # activation throws at load ("Cannot find module") — no commands, no
+        # LSP, no debug. The grep below fails CI if the dep ever goes missing.
+        run: |
+          set -euo pipefail
+          npx --yes @vscode/vsce package -o /tmp/vscode-stryke.vsix
+          if [ "$(unzip -l /tmp/vscode-stryke.vsix | grep -c 'vscode-languageclient/lib')" -eq 0 ]; then
+            echo "::error::packaged .vsix is missing vscode-languageclient — activation would throw"
+            exit 1
+          fi
+          echo "vsix bundles vscode-languageclient"

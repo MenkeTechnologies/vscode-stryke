@@ -13,7 +13,7 @@
 
 ### `[VS CODE EXTENSION // NEON GRAMMAR // COMPLETE BUILTIN SURFACE // LSP]`
 
-> *"Open a `.stk`. The whole language lights up — all 10,450 builtins."*
+> *"Open a `.stk`. The whole language lights up — all 10,452 builtins."*
 
 VS Code / VSCodium support for **[stryke](https://github.com/MenkeTechnologies/strykelang)** — a highly parallel Perl 5 superset interpreter written in Rust. A standalone TextMate grammar (not a perl reskin), filetype detection, language-server integration via `stryke --lsp`, one-key running, and full debugging (breakpoints, stepping, variables) via `stryke --dap`.
 
@@ -33,7 +33,7 @@ VS Code / VSCodium support for **[stryke](https://github.com/MenkeTechnologies/s
 
 The grammar is **generated** (`scripts/gen_grammar.sh`) directly from the stryke binary's own reflection tables, so it carries the **complete** language surface and never drifts — it is **not** a reskin of the built-in Perl grammar:
 
-- **all 10,450 builtins** — `stryke -E 'p join "\n", sort keys %b'`
+- **all 10,452 builtins** — `stryke -E 'p join "\n", sort keys %b'`
 - the 90 keywords — `stryke -E 'p join "\n", sort keys %k'`
 - the 39 parallel primitives — `stryke -E 'p join "\n", sort @{$c{parallel}}'`
 
@@ -47,7 +47,7 @@ Created by **[MenkeTechnologies](https://github.com/MenkeTechnologies)**.
 |---|---|
 | Filetype detection — `*.stk` | **Implemented** — `contributes.languages` extension map |
 | Filetype detection — shebang | **Implemented** — `firstLine` regex `^#!.*\bstryke\b` |
-| Syntax highlighting | **Implemented** — TextMate grammar (`source.stryke`), all 10,450 builtins |
+| Syntax highlighting | **Implemented** — TextMate grammar (`source.stryke`), all 10,452 builtins |
 | Comments / brackets / autoclose | **Implemented** — `language-configuration.json` |
 | Indentation | **Implemented** — brace-based `indentationRules` |
 | Language server | **Implemented** — `stryke --lsp` via vscode-languageclient |
@@ -133,7 +133,7 @@ The grammar maps stryke tokens to standard TextMate scopes, so every VS Code the
 | Phase hooks | `keyword.other.phase.stryke` | `BEGIN` `END` `INIT` `CHECK` `UNITCHECK` |
 | Word operators | `keyword.operator.word.stryke` | `and` `or` `not` `eq` `ne` `cmp` `x` |
 | Parallel builtins (39) | `support.function.parallel.stryke` | `pmap` `pgrep` `pfor` `pchannel` `preduce` `fan` |
-| Builtins (10,450) | `support.function.builtin.stryke` | `p` `say` `map` `grep` `reduce` `json_encode` `sha256` `ai` `absorbance` … |
+| Builtins (10,452) | `support.function.builtin.stryke` | `p` `say` `map` `grep` `reduce` `json_encode` `sha256` `ai` `absorbance` … |
 | Types | `support.type.stryke` | `Int` `Str` `Float` `Bool` `Array` `Hash` `Map` |
 | Thread macros | `keyword.operator.thread.stryke` | `~>` `~>>` `->>` `\|>` (plus `~s>` `~p>` `~d>`) |
 
@@ -180,7 +180,7 @@ vscode-stryke/
 ├── package.json                    # extension manifest (language, grammar, config, LSP)
 ├── language-configuration.json     # comments, brackets, autoclose, indent rules
 ├── extension.js                    # LSP client (stryke --lsp)
-├── syntaxes/stryke.tmLanguage.json # generated grammar — all 10,450 builtins
+├── syntaxes/stryke.tmLanguage.json # generated grammar — all 10,452 builtins
 ├── scripts/gen_grammar.sh          # regenerates the grammar from the stryke binary
 └── scripts/tokenize_test.js        # tokenizes a sample with vscode-textmate + asserts scopes
 ```

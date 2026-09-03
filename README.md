@@ -59,7 +59,7 @@ Created by **[MenkeTechnologies](https://github.com/MenkeTechnologies)**.
 > `$PATH` plus the common install locations (`/opt/homebrew/bin`, `/usr/local/bin`,
 > `~/.cargo/bin`, `~/.local/bin`) — so it works even when the editor is launched
 > from the macOS Dock / Finder, which doesn't inherit your shell `$PATH`. Install
-> with `brew install stryke` or build **[strykelang](https://github.com/MenkeTechnologies/strykelang)**.
+> with `brew install menketechnologies/menketech/stryke` or build **[strykelang](https://github.com/MenkeTechnologies/strykelang)**.
 > If it lives elsewhere, set `stryke.path` to the absolute path.
 
 ---
